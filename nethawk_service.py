@@ -37,6 +37,7 @@ RPCAP_MSG_OPEN_REPLY = 130
 RPCAP_MSG_STARTCAP_REQ = 3
 RPCAP_MSG_STARTCAP_REPLY = 131
 RPCAP_MSG_ENDCAP_REQ = 4
+RPCAP_MSG_ENDCAP_REPLY = 132
 RPCAP_MSG_PACKET = 6
 RPCAP_MSG_AUTH_REQ = 7
 RPCAP_MSG_AUTH_REPLY = 128 + 7
@@ -291,7 +292,8 @@ class RPCAPServer:
             return ver, msg_type, value, payload
         except socket.timeout:
             LOGGER.debug("Timeout receiving message (this may be normal)")
-            return None, None, None, None
+            # Distinguish idle timeout from closed connection.
+            return None, -1, None, None
         except OSError as e:
             # Handle OS-level connection errors FIRST (ConnectionResetError, ConnectionAbortedError are OSError subclasses on Windows)
             # Check exception type for connection errors FIRST (works on all platforms)
@@ -765,6 +767,8 @@ class RPCAPServer:
                     try:
                         conn.settimeout(5)  # 5 second timeout per recv
                         ver, msg_type, value, payload = self.recv_message(conn)
+                        if msg_type == -1:
+                            continue
                         if msg_type is None:
                             LOGGER.warning("Connection closed before authentication")
                             break
@@ -800,17 +804,12 @@ class RPCAPServer:
             while self.running:
                 try:
                     ver, msg_type, value, payload = self.recv_message(conn)
+                    if msg_type == -1:
+                        # Idle timeout while waiting for the next RPCAP command.
+                        continue
                     if msg_type is None:
-                        # Check if this is a timeout (normal) or actual connection close
-                        try:
-                            # Try to check if socket is still connected
-                            conn.getpeername()
-                            # Socket still connected, just timeout - continue waiting
-                            continue
-                        except (OSError, socket.error):
-                            # Socket is closed
-                            LOGGER.debug("Client connection closed (normal disconnect)")
-                            break
+                        LOGGER.debug("Client connection closed (normal disconnect)")
+                        break
                     
                     LOGGER.info(f"Received RPCAP message: type={msg_type}, value={value}, payload_len={len(payload) if payload else 0}")
                     
