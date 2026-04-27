@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Command python -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command python3 -ErrorAction SilentlyContinue)",
+      "PowerShell(py --version 2>&1)",
+      "PowerShell(py -3 --version 2>&1)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\$env:USERNAME\\\\AppData\\\\Local\\\\Programs\\\\Python\" -ErrorAction SilentlyContinue -Recurse -Filter \"python.exe\" | Select-Object FullName)",
+      "PowerShell(py -3 -c \"import sys; print\\(sys.executable\\)\")",
+      "PowerShell(Test-Path \"C:\\\\Projects\\\\pcap\\\\dist\\\\Nethawk.exe\"; \\(Get-Item \"C:\\\\Projects\\\\pcap\\\\dist\\\\Nethawk.exe\" -ErrorAction SilentlyContinue\\).Length)",
+      "PowerShell(py -3 -m pip list 2>&1)",
+      "PowerShell(Select-String -Pattern \"PyQt5|scapy|psutil|pyinstaller\" -CaseSensitive:$false)",
+      "PowerShell($exe = Get-Item \"C:\\\\Projects\\\\pcap\\\\dist\\\\Nethawk.exe\"; Write-Host \"Size: $\\([math]::Round\\($exe.Length/1MB, 1\\)\\) MB\"; Write-Host \"Created: $\\($exe.LastWriteTime\\)\")"
+    ]
+  }
+}

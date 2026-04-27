@@ -1,0 +1,4 @@
+Warning: Could not create log file C:\ProgramData\NetHawk\nethawk_service.log: [Errno 13] Permission denied: 'C:\\ProgramData\\NetHawk\\nethawk_service.log'
+Logging to console only. Run as Administrator to enable file logging.
+Installing service NetHawkCaptureService
+Error installing service: Access is denied. (5)

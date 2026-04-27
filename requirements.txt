@@ -1,0 +1,5 @@
+PyQt5>=5.15.0
+scapy>=2.4.5
+psutil>=5.8.0
+pyinstaller>=5.0.0
+

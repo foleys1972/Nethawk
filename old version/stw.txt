@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin the Wheel - 30 Items</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 1000px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+        
+        .input-area {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #6a11cb;
+        }
+        
+        button {
+            padding: 12px 20px;
+            background-color: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2575fc;
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto 30px;
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            box-shadow: 0 0 0 6px #333, 0 0 15px rgba(0, 0, 0, 0.5);
+            transform: rotate(0deg);
+        }
+        
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 40px;
+            background-color: #ff5252;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 10;
+        }
+        
+        .items-list {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .items-list h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        #items {
+            list-style-type: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        #items li {
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .delete-btn {
+            background-color: #ff5252;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f9ff;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2575fc;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .wheel-section {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: bottom right;
+            left: 0;
+            top: 0;
+            text-align: center;
+            padding-top: 30px;
+            font-weight: bold;
+            color: white;
+            overflow: hidden;
+            font-size: 12px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .action-btn {
+            padding: 10px 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .wheel-container {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .input-area {
+                flex-direction: column;
+            }
+            
+            #items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Spin the Wheel - 30 Items</h1>
+        
+        <div class="input-area">
+            <input type="text" id="itemInput" placeholder="Add an item...">
+            <button id="addBtn">Add Item</button>
+        </div>
+        
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <div id="wheel" class="wheel"></div>
+        </div>
+        
+        <button id="spinBtn">SPIN</button>
+        
+        <div class="result" id="result">Add items and spin the wheel!</div>
+        
+        <div class="items-list">
+            <h3>Items List (<span id="itemCount">0</span>/30)</h3>
+            <ul id="items"></ul>
+        </div>
+        
+        <div class="controls">
+            <button id="clearBtn" class="action-btn">Clear All</button>
+            <button id="sampleBtn" class="action-btn">Add Sample Items</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const items = [];
+            const wheel = document.getElementById('wheel');
+            const itemInput = document.getElementById('itemInput');
+            const addBtn = document.getElementById('addBtn');
+            const spinBtn = document.getElementById('spinBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const sampleBtn = document.getElementById('sampleBtn');
+            const itemsList = document.getElementById('items');
+            const resultDiv = document.getElementById('result');
+            const itemCount = document.getElementById('itemCount');
+            
+            let rotation = 0;
+            let spinning = false;
+            let currentItems = [];
+            
+            // Add item to the list
+            addBtn.addEventListener('click', addItem);
+            itemInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addItem();
+            });
+            
+            function addItem() {
+                if (items.length >= 30) {
+                    resultDiv.textContent = 'Maximum 30 items reached!';
+                    return;
+                }
+                
+                const item = itemInput.value.trim();
+                if (item && !spinning) {
+                    items.push(item);
+                    itemInput.value = '';
+                    updateItemsList();
+                    drawWheel();
+                }
+            }
+            
+            // Clear all items
+            clearBtn.addEventListener('click', function() {
+                if (!spinning) {
+                    items.length = 0;
+                    updateItemsList();
+                    drawWheel();
+                    resultDiv.textContent = 'All items cleared!';
+                }
+            });
+            
+            // Add sample items
+            sampleBtn.addEventListener('click', function() {
+                if (!spinning && items.length < 30) {
+                    const samples = [
+                        "Pizza", "Burger", "Sushi", "Tacos", "Pasta",
+                        "Salad", "Steak", "Chicken", "Fish", "Soup",
+                        "Sandwich", "Curry", "Ramen", "Dumplings", "BBQ",
+                        "Seafood", "Veggies", "Fruit", "Dessert", "Coffee",
+                        "Tea", "Smoothie", "Juice", "Ice Cream", "Cake",
+                        "Cookies", "Wine", "Beer", "Cocktail", "Water"
+                    ];
+                    
+                    for (let i = 0; i < samples.length && items.length < 30; i++) {
+                        items.push(samples[i]);
+                    }
+                    
+                    updateItemsList();
+                    drawWheel();
+                }
+            });
+            
+            // Update the items list display
+            function updateItemsList() {
+                itemsList.innerHTML = '';
+                items.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.onclick = () => {
+                        if (!spinning) {
+                            items.splice(index, 1);
+                            updateItemsList();
+                            drawWheel();
+                        }
+                    };
+                    
+                    li.appendChild(deleteBtn);
+                    itemsList.appendChild(li);
+                });
+                
+                itemCount.textContent = items.length;
+            }
+            
+            // Draw the wheel
+            function drawWheel() {
+                wheel.innerHTML = '';
+                currentItems = [...items];
+                
+                if (currentItems.length === 0) {
+                    const noItemsText = document.createElement('div');
+                    noItemsText.style.position = 'absolute';
+                    noItemsText.style.top = '50%';
+                    noItemsText.style.left = '50%';
+                    noItemsText.style.transform = 'translate(-50%, -50%)';
+                    noItemsText.style.fontSize = '16px';
+                    noItemsText.style.color = '#333';
+                    noItemsText.textContent = 'Add items to begin';
+                    wheel.appendChild(noItemsText);
+                    return;
+                }
+                
+                const sliceAngle = 360 / currentItems.length;
+                const colors = [
+                    '#6a11cb', '#2575fc', '#ff5252', '#4caf50', '#ff9800', 
+                    '#9c27b0', '#2196f3', '#f44336', '#009688', '#673ab7',
+                    '#3f51b5', '#03a9f4', '#00bcd4', '#cddc39', '#ffeb3b',
+                    '#ffc107', '#ff5722', '#795548', '#607d8b', '#8bc34a',
+                    '#e91e63', '#9e9e9e', '#00e676', '#ff4081', '#76ff03',
+                    '#ff9100', '#651fff', '#1de9b6', '#d500f9', '#c6ff00'
+                ];
+                
+                for (let i = 0; i < currentItems.length; i++) {
+                    const section = document.createElement('div');
+                    section.className = 'wheel-section';
+                    section.style.transform = `rotate(${i * sliceAngle}deg)`;
+                    section.style.background = colors[i % colors.length];
+                    
+                    const text = document.createElement('div');
+                    text.textContent = currentItems[i];
+                    text.style.transform = `rotate(${sliceAngle/2}deg)`;
+                    text.style.paddingRight = '80px';
+                    text.style.width = '120px';
+                    text.style.fontSize = currentItems.length > 20 ? '10px' : '12px';
+                    
+                    section.appendChild(text);
+                    wheel.appendChild(section);
+                }
+            }
+            
+            // Spin the wheel
+            spinBtn.addEventListener('click', function() {
+                if (currentItems.length < 2) {
+                    resultDiv.textContent = 'Add at least 2 items to spin!';
+                    return;
+                }
+                
+                if (spinning) return;
+                
+                spinning = true;
+                resultDiv.textContent = 'Spinning...';
+                
+                // Calculate random rotation (at least 2 full rotations plus random)
+                const extraRotation = 2 * 360 + Math.random() * 360;
+                const randomIndex = Math.floor(Math.random() * currentItems.length);
+                const sliceAngle = 360 / currentItems.length;
+                
+                // Adjust rotation to land on selected item
+                const targetRotation = extraRotation + (360 - (randomIndex * sliceAngle + sliceAngle / 2));
+                
+                rotation += targetRotation;
+                
+                // Apply rotation with CSS
+                wheel.style.transform = `rotate(${rotation}deg)`;
+                
+                // Display result after animation
+                setTimeout(() => {
+                    resultDiv.textContent = `Landed on: ${currentItems[randomIndex]}`;
+                    spinning = false;
+                }, 4000);
+            });
+            
+            // Initial draw
+            drawWheel();
+        });
+    </script>
+</body>
+</html>

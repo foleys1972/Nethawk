@@ -1,0 +1,46 @@
+========================================
+NetHawk Pro - Quick Build Guide
+========================================
+
+STEP 1: Install Dependencies
+-----------------------------
+Open Command Prompt or PowerShell and run:
+    pip install -r requirements.txt
+
+STEP 2: Build Executable
+-------------------------
+Option A - Using batch file (easiest):
+    build_exe.bat
+
+Option B - Using Python script:
+    python build_exe.py
+
+Option C - Manual:
+    pyinstaller nethawk2_2.spec
+
+STEP 3: Find Your Executable
+-----------------------------
+After building, your executable will be at:
+    dist\nethawk2_2.exe
+
+STEP 4: Run
+-----------
+Double-click nethawk2_2.exe or run from command line:
+    dist\nethawk2_2.exe
+
+========================================
+IMPORTANT NOTES:
+========================================
+
+- The executable is standalone - no Python needed!
+- First build may take 5-10 minutes
+- Executable size: ~50-150 MB (includes all dependencies)
+- All data is stored in: C:\ProgramData\NetHawk\
+
+TROUBLESHOOTING:
+- If build fails, make sure all dependencies are installed
+- Check that you're using Python 3.7 or higher
+- For 64-bit Windows, use 64-bit Python
+
+========================================
+

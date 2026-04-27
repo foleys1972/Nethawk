@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.spec
+build/
+dist/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NetHawk specific
+*.db
+*.log
+*.wav
+temp_*.wav
+audio_exports/
+exports/
+output/
+pcaps/
+
+# Config (optional - remove if you want to track config)
+nethawk_config.json
+network_analyzer_config.json
+network_config.json
+

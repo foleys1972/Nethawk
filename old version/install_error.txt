@@ -1,0 +1,4 @@
+usage: NetHawkService.exe [-h] [--host HOST] [--port PORT]
+                          [--interface INTERFACE] [--password PASSWORD]
+                          [--config CONFIG] [--install] [--uninstall]
+NetHawkService.exe: error: unrecognized arguments: install
